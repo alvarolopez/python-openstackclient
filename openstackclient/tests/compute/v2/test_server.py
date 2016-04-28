@@ -186,6 +186,56 @@ class TestServerCreate(TestServer):
             nics=[],
             scheduler_hints={},
             config_drive=None,
+            preemptible=False,
+        )
+        # ServerManager.create(name, image, flavor, **kwargs)
+        self.servers_mock.create.assert_called_with(
+            self.new_server.name,
+            self.image,
+            self.flavor,
+            **kwargs
+        )
+
+        self.assertEqual(self.columns, columns)
+        self.assertEqual(self.datalist(), data)
+
+    def test_server_create_preemptible(self):
+        arglist = [
+            '--image', 'image1',
+            '--flavor', 'flavor1',
+            '--preemptible',
+            self.new_server.name,
+        ]
+        verifylist = [
+            ('image', 'image1'),
+            ('flavor', 'flavor1'),
+            ('config_drive', False),
+            ('preemptible', True),
+            ('server_name', self.new_server.name),
+        ]
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+
+        # In base command class ShowOne in cliff, abstract method take_action()
+        # returns a two-part tuple with a tuple of column names and a tuple of
+        # data to be shown.
+        columns, data = self.cmd.take_action(parsed_args)
+
+        # Set expected values
+        kwargs = dict(
+            meta=None,
+            files={},
+            reservation_id=None,
+            min_count=1,
+            max_count=1,
+            security_groups=[],
+            userdata=None,
+            key_name=None,
+            availability_zone=None,
+            block_device_mapping={},
+            nics=[],
+            scheduler_hints={},
+            config_drive=None,
+            preemptible=True,
         )
         # ServerManager.create(name, image, flavor, **kwargs)
         self.servers_mock.create.assert_called_with(
@@ -273,6 +323,7 @@ class TestServerCreate(TestServer):
                    'port-id': 'port1_uuid'}],
             scheduler_hints={},
             config_drive=None,
+            preemptible=False,
         )
         # ServerManager.create(name, image, flavor, **kwargs)
         self.servers_mock.create.assert_called_with(
@@ -332,6 +383,7 @@ class TestServerCreate(TestServer):
             nics=[],
             scheduler_hints={},
             config_drive=None,
+            preemptible=False,
         )
         # ServerManager.create(name, image, flavor, **kwargs)
         self.servers_mock.create.assert_called_with(
@@ -385,6 +437,7 @@ class TestServerCreate(TestServer):
             nics=[],
             scheduler_hints={},
             config_drive=None,
+            preemptible=False,
         )
         # ServerManager.create(name, image, flavor, **kwargs)
         self.servers_mock.create.assert_called_with(

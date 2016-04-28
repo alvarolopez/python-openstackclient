@@ -379,6 +379,11 @@ class CreateServer(command.ShowOne):
             help=_('Maximum number of servers to launch (default=1)'),
         )
         parser.add_argument(
+            '--preemptible',
+            action='store_true',
+            help=_('Indicates that the requested instance is preemptible'),
+        )
+        parser.add_argument(
             '--wait',
             action='store_true',
             help=_('Wait for build to complete'),
@@ -528,7 +533,8 @@ class CreateServer(command.ShowOne):
             block_device_mapping=block_device_mapping,
             nics=nics,
             scheduler_hints=hints,
-            config_drive=config_drive)
+            config_drive=config_drive,
+            preemptible=parsed_args.preemptible)
 
         self.log.debug('boot_args: %s', boot_args)
         self.log.debug('boot_kwargs: %s', boot_kwargs)
